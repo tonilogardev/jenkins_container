@@ -1,0 +1,9 @@
+services:
+  vite-app:
+    build: .
+    ports:
+      - "3001:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: always

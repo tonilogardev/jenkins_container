@@ -1,0 +1,140 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically by JCasC"
+  numExecutors: 2
+  mode: NORMAL
+  scmCheckoutRetryCount: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: "admin"
+         password: "admin"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+jobs:
+  - script: >
+      pipelineJob('Deploy-Container-01') {
+        definition {
+          cps {
+            sandbox(true)
+            script('''
+              pipeline {
+                agent any
+                stages {
+                  stage('Deploy') {
+                    steps {
+                      dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/container_01') {
+                        sh 'docker compose -p container_01 up -d --build'
+                        sh 'docker compose -p container_01 ps'
+                      }
+                    }
+                  }
+                }
+              }
+            ''')
+          }
+        }
+      }
+  - script: >
+      pipelineJob('Stop-Container-01') {
+        definition {
+          cps {
+            sandbox(true)
+            script('''
+              pipeline {
+                agent any
+                stages {
+                  stage('Stop') {
+                    steps {
+                      dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/container_01') {
+                        sh 'docker compose -p container_01 down'
+                      }
+                    }
+                  }
+                }
+              }
+            ''')
+          }
+        }
+      }
+  - script: >
+      pipelineJob('Deploy-Infrastructure') {
+        parameters {
+          choiceParam('ACTION', ['plan', 'apply', 'destroy'], 'Terraform action to perform')
+          booleanParam('CONFIRM', false, 'Confirm execution (required for apply/destroy)')
+        }
+        definition {
+          cps {
+            sandbox(true)
+            script('''
+              pipeline {
+                agent any
+                environment {
+                  HCLOUD_TOKEN = credentials('hcloud-token')
+                }
+                stages {
+                  stage('Init') {
+                    steps {
+                      withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY_FILE')]) {
+                        dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/terraform') {
+                          script {
+                            env.PUBLIC_KEY = sh(script: 'ssh-keygen -y -f $SSH_KEY_FILE', returnStdout: true).trim()
+                            sh """
+                              set -a
+                              . ../env.development
+                              set +a
+                              terraform init
+                            """
+                          }
+                        }
+                      }
+                    }
+                  }
+                  stage('Action') {
+                    steps {
+                      withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY_FILE')]) {
+                        dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/terraform') {
+                          script {
+                            if (params.ACTION == 'plan') {
+                              sh """
+                                set -a
+                                . ../env.development
+                                set +a
+                                terraform plan -var="hcloud_token=\$HCLOUD_TOKEN" -var="ssh_public_key=\$PUBLIC_KEY"
+                              """
+                            } else if (params.ACTION == 'apply') {
+                              if (params.CONFIRM) {
+                                sh """
+                                  set -a
+                                  . ../env.development
+                                  set +a
+                                  terraform apply -auto-approve -var="hcloud_token=\$HCLOUD_TOKEN" -var="ssh_public_key=\$PUBLIC_KEY"
+                                """
+                              } else {
+                                error "Confirmation required for APPLY action"
+                              }
+                            } else if (params.ACTION == 'destroy') {
+                              if (params.CONFIRM) {
+                                sh """
+                                  set -a
+                                  . ../env.development
+                                  set +a
+                                  terraform destroy -auto-approve -var="hcloud_token=\$HCLOUD_TOKEN" -var="ssh_public_key=\$PUBLIC_KEY"
+                                """
+                              } else {
+                                error "Confirmation required for DESTROY action"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ''')
+          }
+        }
+      }
