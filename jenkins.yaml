@@ -15,7 +15,7 @@ jenkins:
 
 jobs:
   - script: >
-      pipelineJob('Deploy-Container-01') {
+      pipelineJob('Deploy-App') {
         definition {
           cps {
             sandbox(true)
@@ -25,9 +25,9 @@ jobs:
                 stages {
                   stage('Deploy') {
                     steps {
-                      dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/container_01') {
-                        sh 'docker compose -p container_01 up -d --build'
-                        sh 'docker compose -p container_01 ps'
+                      dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/003_app') {
+                        sh 'docker compose -p 003_app up -d --build'
+                        sh 'docker compose -p 003_app ps'
                       }
                     }
                   }
@@ -38,7 +38,7 @@ jobs:
         }
       }
   - script: >
-      pipelineJob('Stop-Container-01') {
+      pipelineJob('Stop-App') {
         definition {
           cps {
             sandbox(true)
@@ -48,8 +48,8 @@ jobs:
                 stages {
                   stage('Stop') {
                     steps {
-                      dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/container_01') {
-                        sh 'docker compose -p container_01 down'
+                      dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/003_app') {
+                        sh 'docker compose -p 003_app down'
                       }
                     }
                   }
@@ -78,7 +78,7 @@ jobs:
                   stage('Init') {
                     steps {
                       withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY_FILE')]) {
-                        dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/terraform') {
+                        dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/002_terraform') {
                           script {
                             env.PUBLIC_KEY = sh(script: 'ssh-keygen -y -f $SSH_KEY_FILE', returnStdout: true).trim()
                             sh """
@@ -95,7 +95,7 @@ jobs:
                   stage('Action') {
                     steps {
                       withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY_FILE')]) {
-                        dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/terraform') {
+                        dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/002_terraform') {
                           script {
                             if (params.ACTION == 'plan') {
                               sh """

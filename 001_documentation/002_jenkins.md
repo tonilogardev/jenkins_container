@@ -37,14 +37,14 @@
 
 ## 3 Automated Pipelines
 
-### Deploy-Container-01
-Deploys the web application (Vite + TS) located in `container_01`.
-- Executes: `docker compose -p container_01 up -d --build`
+### Deploy-App
+Deploys the web application (Vite + TS) located in `003_app`.
+- Executes: `docker compose -p 003_app up -d --build`
 - App port: `3001`
 
-### Stop-Container-01
-Stops and removes the `container_01` application.
-- Executes: `docker compose -p container_01 down`
+### Stop-App
+Stops and removes the `003_app` application.
+- Executes: `docker compose -p 003_app down`
 
 ### Deploy-Infrastructure
 Terraform pipeline with parameters for infrastructure management.

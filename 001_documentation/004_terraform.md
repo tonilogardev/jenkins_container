@@ -24,7 +24,7 @@ The configuration creates:
 ## 2 File Structure
 
 ```
-terraform/
+002_terraform/
 ├── providers.tf    # Hetzner provider configuration
 ├── variables.tf    # Input variable declarations
 ├── main.tf         # Server and SSH key resources
@@ -35,7 +35,7 @@ terraform/
 
 ## 3 Variables
 
-Variables are defined in `terraform/variables.tf` and can be overridden via environment or CLI.
+Variables are defined in `002_terraform/variables.tf` and can be overridden via environment or CLI.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
