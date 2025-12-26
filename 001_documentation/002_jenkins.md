@@ -63,7 +63,8 @@ Credentials (SSH Key and Hetzner Token) are stored in **Jenkins' internal encryp
 
 ### Configured IDs
 - `ssh-credentials`: SSH private key.
-- `hcloud-token`: Hetzner Cloud API Token.
+- `hcloud-token`: Hetzner Cloud API Token (Terraform).
+- `hetzner-dns-token`: Hetzner DNS API Token (Traefik/Let's Encrypt).
 
 ### Adding Credentials Manually
 
@@ -71,11 +72,19 @@ Credentials (SSH Key and Hetzner Token) are stored in **Jenkins' internal encryp
 2. Click **(global)** under the "System" domain.
 3. Click **Add Credentials**.
 
-#### For Hetzner Token:
+#### For Hetzner Cloud Token (Terraform):
 - **Kind**: Secret text
-- **Secret**: Paste your Hetzner API token.
+- **Secret**: Paste your Hetzner Cloud API token.
 - **ID**: `hcloud-token`
 - **Description**: "Hetzner Cloud API Token"
+
+#### For Hetzner DNS Token (Traefik/SSL):
+- **Kind**: Secret text
+- **Secret**: Paste your Hetzner DNS API token.
+- **ID**: `hetzner-dns-token`
+- **Description**: "Hetzner DNS API Token for Traefik/Let's Encrypt"
+
+> This token is passed to Traefik during production deployment to validate wildcard SSL certificates via DNS challenge.
 
 #### For SSH Keys:
 - **Kind**: SSH Username with private key

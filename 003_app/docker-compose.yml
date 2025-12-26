@@ -1,9 +1,53 @@
 services:
+  # ============================================
+  # TRAEFIK - Reverse Proxy (Production only)
+  # ============================================
+  traefik:
+    image: traefik:v3.0
+    profiles:
+      - production
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - HETZNER_API_KEY=${HETZNER_DNS_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./002_traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./002_traefik/letsencrypt:/letsencrypt
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.tls.domains[0].main=${DOMAIN_NAME}"
+      - "traefik.http.routers.dashboard.tls.domains[0].sans=*.${DOMAIN_NAME}"
+
+  # ============================================
+  # WELLCOME - Frontend App
+  # ============================================
   vite-app:
     build: ./001_wellcome
+    container_name: wellcome
+    restart: unless-stopped
+    # Development: expose port directly
     ports:
-      - "3001:5173"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    restart: always
+      - "${DEV_PORT:-3001}:5173"
+    # Production: use Traefik labels
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wellcome.rule=Host(`${DOMAIN_NAME}`) || Host(`www.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.wellcome.tls=true"
+      - "traefik.http.routers.wellcome.tls.certresolver=letsencrypt"
+      - "traefik.http.services.wellcome.loadbalancer.server.port=5173"
+
+networks:
+  proxy:
+    name: proxy

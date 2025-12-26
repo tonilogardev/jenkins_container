@@ -26,8 +26,8 @@ jobs:
                   stage('Deploy') {
                     steps {
                       dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/003_app') {
-                        sh 'docker compose -p 003_app up -d --build'
-                        sh 'docker compose -p 003_app ps'
+                        sh 'docker compose --env-file ../env.development -p 003_app up -d --build'
+                        sh 'docker compose --env-file ../env.development -p 003_app ps'
                       }
                     }
                   }
@@ -49,7 +49,7 @@ jobs:
                   stage('Stop') {
                     steps {
                       dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/003_app') {
-                        sh 'docker compose -p 003_app down'
+                        sh 'docker compose --env-file ../env.development -p 003_app down'
                       }
                     }
                   }
