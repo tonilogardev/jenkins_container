@@ -53,8 +53,10 @@ a {
   width: 120px;
   height: auto;
   margin-bottom: 1.5rem;
+  background-color: white;
+  padding: 10px;
   border-radius: 50%;
-  /* Optional: if circular logo desired */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .hero h1 {
