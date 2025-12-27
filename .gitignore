@@ -140,3 +140,4 @@ vite.config.ts.timestamp-*
 secrets/
 *@tmp
 keys/
+.terraform/
