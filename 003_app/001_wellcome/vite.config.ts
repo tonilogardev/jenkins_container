@@ -8,5 +8,13 @@ export default defineConfig({
             'www.tonilogar.com',
             'localhost'
         ]
+    },
+    build: {
+        rollupOptions: {
+            input: {
+                main: 'index.html',
+                cookies: 'cookies.html'
+            }
+        }
     }
 })
