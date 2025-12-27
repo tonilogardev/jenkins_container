@@ -12,3 +12,4 @@ docker compose down
 # Build and start (logs visible, Ctrl+C stops container)
 docker compose build
 docker compose up
+
