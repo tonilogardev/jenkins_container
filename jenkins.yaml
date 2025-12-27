@@ -178,7 +178,6 @@ jobs:
                       }
                     }
                   }
-                  stages {
                     stage('Checkout') {
                       steps {
                         git branch: "${params.BRANCH_NAME}", url: 'git@github.com:tonilogardev/jenkins_container.git', credentialsId: 'ssh-credentials'
