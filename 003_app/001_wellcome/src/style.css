@@ -49,6 +49,14 @@ a {
   max-width: 800px;
 }
 
+.hero-logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1.5rem;
+  border-radius: 50%;
+  /* Optional: if circular logo desired */
+}
+
 .hero h1 {
   font-size: 3rem;
   font-weight: 700;
