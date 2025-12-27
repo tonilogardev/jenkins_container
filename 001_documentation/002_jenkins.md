@@ -96,6 +96,20 @@ Credentials (SSH Key and Hetzner Token) are stored in **Jenkins' internal encryp
 > [!IMPORTANT]
 > **Security**: Once credentials are configured in Jenkins, **delete local files** (such as `secrets/` folder or token files). Jenkins stores this data encrypted. Keeping them in plain text on your machine is an unnecessary security risk.
 
+### Private Repository Access (GitHub Deploy Key)
+
+For pipelines that need to access a **private GitHub repository** (e.g., `Deploy-Production`), you must configure a **Deploy Key** in GitHub.
+
+1. **Verify your SSH Key**: Ensure the public key corresponding to the `ssh-credentials` ID in Jenkins is available.
+2. **Go to GitHub**: Navigate to your repository -> **Settings** -> **Deploy keys**.
+3. **Add Deploy Key**: 
+   - Click **Add deploy key**.
+   - **Title**: Give it a recognizable name (e.g., "Jenkins Production").
+   - **Key**: Paste the **Public SSH Key**.
+   - **Allow write access**: **Unchecked** (unless you specifically need Jenkins to push tags or commits back to the repo). For standard deployment (checkout only), read-only is sufficient and safer.
+4. **Update Pipeline**: Ensure your pipeline uses the SSH URL (`git@github.com:...`) and references the `ssh-credentials` ID.
+
+
 [←Index](#index)
 
 ## 5 Important Notes
