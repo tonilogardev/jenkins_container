@@ -1,13 +1,202 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>container_01</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toni Logar - Engineering Hub</title>
+  <meta name="description" content="Advanced Engineering Hub, GIS, BIM, and Data Science." />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body>
+  <div class="layout">
+    <header class="hero">
+      <h1>Welcome</h1>
+      <p>Explore advanced tools for GIS, BIM, Data Science, and Artificial Intelligence.</p>
+    </header>
+
+    <main class="bento-grid">
+      <!-- GIS & Imagen Satelital -->
+      <a href="/gis" class="bento-card span-2 row-span-2">
+        <div class="card-bg-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+            <path d="M2 12h20" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+              <path d="M2 12h20" />
+            </svg>
+          </div>
+          <h3>GIS & Satellite Imagery</h3>
+          <p>Mapping the Planet</p>
+        </div>
+      </a>
+
+      <!-- BIM -->
+      <a href="/bim" class="bento-card row-span-2">
+        <div class="card-bg-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+            <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+            <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+            <path d="M10 6h4" />
+            <path d="M10 10h4" />
+            <path d="M10 14h4" />
+            <path d="M10 18h4" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+              <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+              <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+              <path d="M10 6h4" />
+              <path d="M10 10h4" />
+              <path d="M10 14h4" />
+              <path d="M10 18h4" />
+            </svg>
+          </div>
+          <h3>BIM</h3>
+          <p>Digitizing Infrastructure</p>
+        </div>
+      </a>
+
+      <!-- Ciencia de Datos -->
+      <a href="/data" class="bento-card">
+        <div class="card-bg-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="5" rx="9" ry="3" />
+            <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+            <path d="M3 12A9 3 0 0 0 21 12" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3" />
+              <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+              <path d="M3 12A9 3 0 0 0 21 12" />
+            </svg>
+          </div>
+          <h3>Data Science</h3>
+          <p>Extracting Insight</p>
+        </div>
+      </a>
+
+      <!-- Habilidades -->
+      <a href="/skills" class="bento-card span-2">
+        <div class="card-bg-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="16" height="16" x="4" y="4" rx="2" />
+            <rect width="6" height="6" x="9" y="9" rx="1" />
+            <path d="M15 2v2" />
+            <path d="M15 20v2" />
+            <path d="M2 15h2" />
+            <path d="M2 9h2" />
+            <path d="M20 15h2" />
+            <path d="M20 9h2" />
+            <path d="M9 2v2" />
+            <path d="M9 20v2" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="16" height="16" x="4" y="4" rx="2" />
+              <rect width="6" height="6" x="9" y="9" rx="1" />
+              <path d="M15 2v2" />
+              <path d="M15 20v2" />
+              <path d="M2 15h2" />
+              <path d="M2 9h2" />
+              <path d="M20 15h2" />
+              <path d="M20 9h2" />
+              <path d="M9 2v2" />
+              <path d="M9 20v2" />
+            </svg>
+          </div>
+          <h3>Skills</h3>
+          <p>Tech Radar</p>
+        </div>
+      </a>
+
+      <!-- VR / AR -->
+      <a href="/vr" class="bento-card span-2">
+        <div class="card-bg-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 19h4" />
+            <path d="M10 2h4" />
+            <path d="M2 8a4 2 0 0 0 4 4h12a4 2 0 0 0 4-4" />
+            <path d="M2 16a4 2 0 0 1 4-4h12a4 2 0 0 1 4 4" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 19h4" />
+              <path d="M10 2h4" />
+              <path d="M2 8a4 2 0 0 0 4 4h12a4 2 0 0 0 4-4" />
+              <path d="M2 16a4 2 0 0 1 4-4h12a4 2 0 0 1 4 4" />
+            </svg>
+          </div>
+          <h3>Virtual / Augmented Reality</h3>
+          <p>Immersive Realities</p>
+        </div>
+      </a>
+
+      <!-- Sobre Mí -->
+      <a href="/about" class="bento-card">
+        <div class="card-bg-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <h3>About Me</h3>
+          <p>The Architect</p>
+        </div>
+      </a>
+    </main>
+
+    <div id="cookie-consent" class="cookie-consent hidden">
+      <div class="cookie-content">
+        <p>We use minimal cookies to ensure basic site functionality. <a href="/cookies.html"
+            style="text-decoration: underline; color: var(--accent-color);">Read cookie policy</a>.</p>
+        <div class="cookie-buttons">
+          <button id="btn-decline" class="btn btn-ghost">Decline</button>
+          <button id="btn-accept" class="btn btn-primary">Accept</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

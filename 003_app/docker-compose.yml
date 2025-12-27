@@ -43,6 +43,9 @@ services:
     # Development: expose port directly
     ports:
       - "${DEV_PORT:-3001}:5173"
+    volumes:
+      - ./001_wellcome:/app
+      - /app/node_modules
     # Production: use Traefik labels
     networks:
       - proxy
