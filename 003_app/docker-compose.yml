@@ -3,16 +3,21 @@ services:
   # TRAEFIK - Reverse Proxy (Production only)
   # ============================================
   traefik:
-    image: traefik:v3.0
+    image: traefik:v3.6
     profiles:
       - production
     container_name: traefik
     restart: unless-stopped
+    command:
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
     ports:
       - "80:80"
       - "443:443"
     environment:
-      - HETZNER_API_KEY=${HETZNER_DNS_TOKEN}
+      - HETZNER_API_TOKEN=${HCLOUD_TOKEN}
+      - HCLOUD_TOKEN=${HCLOUD_TOKEN}
+      - DOCKER_API_VERSION=1.44
+      - ACME_EMAIL=${ACME_EMAIL}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./002_traefik/traefik.yml:/etc/traefik/traefik.yml:ro

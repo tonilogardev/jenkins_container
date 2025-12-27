@@ -1,0 +1,62 @@
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+Processing provided DSL script
+Processing provided DSL script
+Processing provided DSL script

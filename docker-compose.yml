@@ -9,6 +9,8 @@ services:
     container_name: jenkins
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/jenkins.yaml
+      - HCLOUD_TOKEN=${HCLOUD_TOKEN}
+      - HETZNER_DNS_TOKEN=${HETZNER_DNS_TOKEN}
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock

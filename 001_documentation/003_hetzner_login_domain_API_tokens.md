@@ -35,9 +35,13 @@ We use Let's Encrypt, so a real domain is mandatory.
 
 ![Steps in Hetzner](./img/001_buy_domain.png)
 
-[Create DNS zone for the domain](https://dns.hetzner.com/) →  
-![DNS zone](./img/003_dns_zone.jpg)  
-![DNS zone](./img/004_dns_zone.png)
+[Create DNS zone for the domain](https://console.hetzner.cloud/) →
+**IMPORTANT:** The DNS Zone is now managed automatically by Terraform in **Hetzner Cloud**. You do NOT need to create it manually in the legacy DNS Console.
+
+However, you MUST configure the **Nameservers** in your domain registrar to point to Hetzner Cloud DNS:
+- `hydrogen.ns.hetzner.com`
+- `oxygen.ns.hetzner.com`
+- `helium.ns.hetzner.de`
 
 Quick check:
 
@@ -56,7 +60,7 @@ Create a project in https://console.hetzner.cloud and generate a Cloud API token
 
 Generate a DNS API token at https://dns.hetzner.com/settings/api-token.
 
-![Generate API token](./img/009_hetznet_api_token.png)
+> **Note:** The legacy DNS API token is **no longer required** as we manage DNS via the Cloud API. Only the Cloud API Token is needed.
 
 [←Index](#index)
 
@@ -67,7 +71,7 @@ Store secrets outside version control (see `.gitignore`). Both `.env` files must
 [.env.development](../.env.development)
 ```bash
 TF_VAR_cloud_api_token="<hetzner-cloud-token>"
-TF_VAR_dns_api_token="<hetzner-dns-token>"
+# TF_VAR_dns_api_token is NOT used anymore
 TF_VAR_domain_name="<domain>"
 TF_VAR_admin_email="<admin-email>"
 TF_VAR_ssh_public_key_path="./ssh/id_ed25519_vps_hetzner.pub"
@@ -84,7 +88,7 @@ TF_VAR_project_label="web_project_hetzner_vps_server"
 [.env.production](../.env.production)
 ```bash
 TF_VAR_cloud_api_token="<hetzner-cloud-token>"
-TF_VAR_dns_api_token="<hetzner-dns-token>"
+# TF_VAR_dns_api_token is NOT used anymore
 TF_VAR_domain_name="<domain>"
 TF_VAR_admin_email="<admin-email>"
 TF_VAR_ssh_public_key_path="./ssh/id_ed25519_vps_hetzner.pub"

@@ -13,6 +13,33 @@ jenkins:
     loggedInUsersCanDoAnything:
       allowAnonymousRead: false
 
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: "ssh-credentials"
+              username: "root"
+              privateKeySource:
+                directEntry:
+                  privateKey: |
+                    -----BEGIN OPENSSH PRIVATE KEY-----
+                    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+                    QyNTUxOQAAACCEuL1XZ1yNazGZaRM+sDpgwmAmp2ocxVdudoCD6pARcgAAAJjVUBVS1VAV
+                    UgAAAAtzc2gtZWQyNTUxOQAAACCEuL1XZ1yNazGZaRM+sDpgwmAmp2ocxVdudoCD6pARcg
+                    AAAEACubIs3LfoqDCJxzf6MK7Jbl/DEe+nw2F+wZosxtTq+4S4vVdnXI1rMZlpEz6wOmDC
+                    YCanahzFV252gIPqkBFyAAAAFWplbmtpbnNAdG9uaWxvZ2FyLmNvbQ==
+                    -----END OPENSSH PRIVATE KEY-----
+          - string:
+              scope: GLOBAL
+              id: "hcloud-token"
+              secret: "${HCLOUD_TOKEN}"
+          - string:
+              scope: GLOBAL
+              id: "hetzner-dns-token"
+              secret: "${HETZNER_DNS_TOKEN}"
+
 jobs:
   - script: >
       pipelineJob('Deploy-App') {
@@ -94,35 +121,20 @@ jobs:
                   }
                   stage('Action') {
                     steps {
-                      withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY_FILE')]) {
+                      withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY_FILE'), string(credentialsId: 'hcloud-token', variable: 'HCLOUD_TOKEN')]) {
                         dir('/home/a.lopez.g/Documents/trabajos/jenkins_container/002_terraform') {
                           script {
                             if (params.ACTION == 'plan') {
-                              sh """
-                                set -a
-                                . ../env.development
-                                set +a
-                                terraform plan -var="hcloud_token=\$HCLOUD_TOKEN" -var="ssh_public_key=\$PUBLIC_KEY"
-                              """
+                              sh 'set -a && . ../env.development && set +a && terraform plan -var="hcloud_token=$HCLOUD_TOKEN" -var="ssh_public_key=$PUBLIC_KEY"'
                             } else if (params.ACTION == 'apply') {
                               if (params.CONFIRM) {
-                                sh """
-                                  set -a
-                                  . ../env.development
-                                  set +a
-                                  terraform apply -auto-approve -var="hcloud_token=\$HCLOUD_TOKEN" -var="ssh_public_key=\$PUBLIC_KEY"
-                                """
+                                sh 'set -a && . ../env.development && set +a && terraform apply -auto-approve -var="hcloud_token=$HCLOUD_TOKEN" -var="ssh_public_key=$PUBLIC_KEY"'
                               } else {
                                 error "Confirmation required for APPLY action"
                               }
                             } else if (params.ACTION == 'destroy') {
                               if (params.CONFIRM) {
-                                sh """
-                                  set -a
-                                  . ../env.development
-                                  set +a
-                                  terraform destroy -auto-approve -var="hcloud_token=\$HCLOUD_TOKEN" -var="ssh_public_key=\$PUBLIC_KEY"
-                                """
+                                sh 'set -a && . ../env.development && set +a && terraform destroy -auto-approve -var="hcloud_token=$HCLOUD_TOKEN" -var="ssh_public_key=$PUBLIC_KEY"'
                               } else {
                                 error "Confirmation required for DESTROY action"
                               }
@@ -153,23 +165,14 @@ jobs:
                   VPS_USER = 'root'
                   VPS_PATH = '/opt/app'
                   PROJECT_DIR = '/home/a.lopez.g/Documents/trabajos/jenkins_container'
+                  VPS_IP = '162.55.220.151'
                 }
                 stages {
                   stage('Validate') {
                     steps {
                       script {
                         if (!params.CONFIRM) {
-                          error('Deployment not confirmed. Check CONFIRM to proceed.')
-                        }
-                      }
-                    }
-                  }
-                  stage('Get VPS IP') {
-                    steps {
-                      dir("${PROJECT_DIR}/002_terraform") {
-                        script {
-                          env.VPS_IP = sh(script: 'terraform output -raw server_ip', returnStdout: true).trim()
-                          echo "VPS IP: ${env.VPS_IP}"
+                          error "Deployment must be confirmed with the CONFIRM parameter"
                         }
                       }
                     }
@@ -178,28 +181,34 @@ jobs:
                     steps {
                       withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY')]) {
                         sh """
-                          ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY ${VPS_USER}@${VPS_IP} 'mkdir -p ${VPS_PATH}'
-                          rsync -avz --delete -e 'ssh -o StrictHostKeyChecking=no -i '\\$SSH_KEY \\
-                            ${PROJECT_DIR}/003_app/ ${VPS_USER}@${VPS_IP}:${VPS_PATH}/
-                          scp -o StrictHostKeyChecking=no -i \\$SSH_KEY \\
-                            ${PROJECT_DIR}/env.production ${VPS_USER}@${VPS_IP}:${VPS_PATH}/.env
+                          timeout=300
+                          elapsed=0
+                          interval=10
+                          while ! ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY \\$VPS_USER@\\$VPS_IP "command -v docker" > /dev/null 2>&1; do
+                            if [ \\$elapsed -ge \\$timeout ]; then
+                              echo "Timeout waiting for Docker to be installed"
+                              exit 1
+                            fi
+                            echo "Waiting for Docker to be installed... (\\$elapsed/\\$timeout seconds)"
+                            sleep \\$interval
+                            elapsed=\\$((elapsed + interval))
+                          done
+                          echo "Docker is ready!"
+                          
+                          ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY \\$VPS_USER@\\$VPS_IP "mkdir -p \\$VPS_PATH"
+                          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY" \
+                            /home/a.lopez.g/Documents/trabajos/jenkins_container/003_app/ \\$VPS_USER@\\$VPS_IP:\\$VPS_PATH/
+                          scp -o StrictHostKeyChecking=no -i \\$SSH_KEY \
+                            /home/a.lopez.g/Documents/trabajos/jenkins_container/env.production \\$VPS_USER@\\$VPS_IP:\\$VPS_PATH/.env
                         """
                       }
                     }
                   }
                   stage('Deploy on VPS') {
                     steps {
-                      withCredentials([
-                        sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY'),
-                        string(credentialsId: 'hetzner-dns-token', variable: 'DNS_TOKEN')
-                      ]) {
+                      withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY'), string(credentialsId: 'hcloud-token', variable: 'HCLOUD_TOKEN')]) {
                         sh """
-                          ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY ${VPS_USER}@${VPS_IP} '
-                            cd ${VPS_PATH}
-                            export HETZNER_DNS_TOKEN=${DNS_TOKEN}
-                            docker compose --env-file .env --profile production up -d --build
-                            docker compose --env-file .env ps
-                          '
+                          ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY \\$VPS_USER@\\$VPS_IP "export HCLOUD_TOKEN=\\$HCLOUD_TOKEN && cd \\$VPS_PATH && docker compose --env-file .env --profile production up -d --build"
                         """
                       }
                     }

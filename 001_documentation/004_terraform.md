@@ -18,6 +18,7 @@ Terraform is installed in the Jenkins container (v1.9.0) and is used to provisio
 The configuration creates:
 - SSH Key in Hetzner
 - VPS Server (Ubuntu 22.04)
+- DNS Zone (Hetzner Cloud DNS)
 
 [←Index](#index)
 

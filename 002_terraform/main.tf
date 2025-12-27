@@ -44,3 +44,59 @@ resource "hcloud_server" "web" {
     echo "Docker installation complete!"
   EOF
 }
+
+# ===========================================
+# DNS Zone (new Hetzner Cloud DNS)
+# ===========================================
+
+resource "hcloud_zone" "main" {
+  name = var.domain_name
+  mode = "primary"
+  ttl  = 300
+}
+
+# Root domain A record (@)
+resource "hcloud_zone_rrset" "root_a" {
+  zone = hcloud_zone.main.id
+  name = "@"
+  type = "A"
+  ttl  = 300
+  records = [
+    { value = hcloud_server.web.ipv4_address }
+  ]
+}
+
+# Wildcard A record (*.domain)
+resource "hcloud_zone_rrset" "wildcard_a" {
+  zone = hcloud_zone.main.id
+  name = "*"
+  type = "A"
+  ttl  = 300
+  records = [
+    { value = hcloud_server.web.ipv4_address }
+  ]
+}
+
+# Root domain AAAA record (@) - IPv6
+resource "hcloud_zone_rrset" "root_aaaa" {
+  zone = hcloud_zone.main.id
+  name = "@"
+  type = "AAAA"
+  ttl  = 300
+  records = [
+    { value = hcloud_server.web.ipv6_address }
+  ]
+}
+
+# Wildcard AAAA record - IPv6
+resource "hcloud_zone_rrset" "wildcard_aaaa" {
+  zone = hcloud_zone.main.id
+  name = "*"
+  type = "AAAA"
+  ttl  = 300
+  records = [
+    { value = hcloud_server.web.ipv6_address }
+  ]
+}
+
+
