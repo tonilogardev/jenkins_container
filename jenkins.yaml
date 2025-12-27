@@ -177,33 +177,39 @@ jobs:
                       }
                     }
                   }
-                  stage('Copy Files to VPS') {
-                    steps {
-                      withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY')]) {
-                        sh """
-                          timeout=300
-                          elapsed=0
-                          interval=10
-                          while ! ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY \\$VPS_USER@\\$VPS_IP "command -v docker" > /dev/null 2>&1; do
-                            if [ \\$elapsed -ge \\$timeout ]; then
-                              echo "Timeout waiting for Docker to be installed"
-                              exit 1
-                            fi
-                            echo "Waiting for Docker to be installed... (\\$elapsed/\\$timeout seconds)"
-                            sleep \\$interval
-                            elapsed=\\$((elapsed + interval))
-                          done
-                          echo "Docker is ready!"
-                          
-                          ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY \\$VPS_USER@\\$VPS_IP "mkdir -p \\$VPS_PATH"
-                          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY" \
-                            /home/a.lopez.g/Documents/trabajos/jenkins_container/003_app/ \\$VPS_USER@\\$VPS_IP:\\$VPS_PATH/
-                          scp -o StrictHostKeyChecking=no -i \\$SSH_KEY \
-                            /home/a.lopez.g/Documents/trabajos/jenkins_container/env.production \\$VPS_USER@\\$VPS_IP:\\$VPS_PATH/.env
-                        """
+                  stages {
+                    stage('Checkout') {
+                      steps {
+                        git branch: 'main', url: 'https://github.com/tonilogardev/jenkins_container.git'
                       }
                     }
-                  }
+                    stage('Copy Files to VPS') {
+                      steps {
+                        withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY')]) {
+                          sh """
+                            timeout=300
+                            elapsed=0
+                            interval=10
+                            while ! ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY \\$VPS_USER@\\$VPS_IP "command -v docker" > /dev/null 2>&1; do
+                              if [ \\$elapsed -ge \\$timeout ]; then
+                                echo "Timeout waiting for Docker to be installed"
+                                exit 1
+                              fi
+                              echo "Waiting for Docker to be installed... (\\$elapsed/\\$timeout seconds)"
+                              sleep \\$interval
+                              elapsed=\\$((elapsed + interval))
+                            done
+                            echo "Docker is ready!"
+                            
+                            ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY \\$VPS_USER@\\$VPS_IP "mkdir -p \\$VPS_PATH"
+                            rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -i \\$SSH_KEY" \
+                              003_app/ \\$VPS_USER@\\$VPS_IP:\\$VPS_PATH/
+                            scp -o StrictHostKeyChecking=no -i \\$SSH_KEY \
+                              /home/a.lopez.g/Documents/trabajos/jenkins_container/env.production \\$VPS_USER@\\$VPS_IP:\\$VPS_PATH/.env
+                          """
+                        }
+                      }
+                    }
                   stage('Deploy on VPS') {
                     steps {
                       withCredentials([sshUserPrivateKey(credentialsId: 'ssh-credentials', keyFileVariable: 'SSH_KEY'), string(credentialsId: 'hcloud-token', variable: 'HCLOUD_TOKEN')]) {
