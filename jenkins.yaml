@@ -154,6 +154,7 @@ jobs:
       pipelineJob('Deploy-Production') {
         parameters {
           booleanParam('CONFIRM', false, 'Confirm deployment to production VPS')
+          choiceParam('BRANCH_NAME', ['main', 'main_dev_pro'], 'Select branch to deploy')
         }
         definition {
           cps {
@@ -180,7 +181,7 @@ jobs:
                   stages {
                     stage('Checkout') {
                       steps {
-                        git branch: 'main', url: 'https://github.com/tonilogardev/jenkins_container.git'
+                        git branch: "${params.BRANCH_NAME}", url: 'https://github.com/tonilogardev/jenkins_container.git'
                       }
                     }
                     stage('Copy Files to VPS') {
